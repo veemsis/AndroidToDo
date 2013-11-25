@@ -2,7 +2,11 @@ package com.project.androidtodo;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
@@ -18,5 +22,49 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.add_note:
+	            addNote();
+	            return true;
+	        case R.id.action_settings:
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
+	private void addNote() {
+		// TODO Auto-generated method stub
+		
+		AlertDialog.Builder noteBuilder = new AlertDialog.Builder(this);  
+	       noteBuilder.setTitle("Add TODO note");  
+	       EditText input = new EditText(this);  
+	       input.setSingleLine();  
+	       noteBuilder.setView(input);
+	       
+	              
+	      
+	       //Save button  
+	       noteBuilder.setPositiveButton("Save",  
+	        new DialogInterface.OnClickListener() {  
+	        public void onClick(DialogInterface dialog, int which) {  
+	          //Save info here 
+	        }  
+	        });  
+	      
+	       //Cancel button  
+	       noteBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
+	       @Override  
+	       public void onClick(DialogInterface dialog, int which) {  
+	        // Do nothing, just close the dialog box  
+	       }  
+	       });  
+	       // Remember, create doesn't show the dialog  
+	       AlertDialog noteDialog = noteBuilder.create();  
+	       noteDialog.show();
+	}
 }

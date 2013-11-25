@@ -3,10 +3,12 @@ package com.project.androidtodo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
 		
 		AlertDialog.Builder noteBuilder = new AlertDialog.Builder(this);  
 	       noteBuilder.setTitle("Add TODO note");  
-	       EditText input = new EditText(this);  
+	       final EditText input = new EditText(this);  
 	       input.setSingleLine();  
 	       noteBuilder.setView(input);
 	       
@@ -52,7 +54,13 @@ public class MainActivity extends Activity {
 	       noteBuilder.setPositiveButton("Save",  
 	        new DialogInterface.OnClickListener() {  
 	        public void onClick(DialogInterface dialog, int which) {  
-	          //Save info here 
+	          //Save info here
+	        	Context context = getApplicationContext();
+	        	CharSequence text = input.getText().toString();;
+	        	int duration = Toast.LENGTH_SHORT;
+
+	        	Toast toast = Toast.makeText(context, text, duration);
+	        	toast.show();
 	        }  
 	        });  
 	      

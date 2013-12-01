@@ -1,7 +1,9 @@
 package com.project.androidtodo;
 
+import java.util.List;
+
 import android.os.Bundle;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,13 +11,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
 
-public class MainActivity extends Activity {
 
+public class MainActivity extends ListActivity  {
+	private CommentsDataSource datasource;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		datasource = new CommentsDataSource(this);
+	    datasource.open();
+
+	    List<Comment> values = datasource.getAllComments();
+
+	    // use the SimpleCursorAdapter to show the
+	    // elements in a ListView
+	    ArrayAdapter<Comment> adapter = new ArrayAdapter<Comment>(this,
+	        android.R.layout.simple_list_item_1, values);
+	    setListAdapter(adapter);
 	}
 
 	@Override
@@ -27,7 +42,11 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	   
+	    
 	    // Handle presses on the action bar items
+	    
 	    switch (item.getItemId()) {
 	        case R.id.add_note:
 	            addNote();
@@ -37,9 +56,11 @@ public class MainActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	  
+	    
 	}
 
-	private void addNote() {
+	public void addNote() {
 		// TODO Auto-generated method stub
 		
 		AlertDialog.Builder noteBuilder = new AlertDialog.Builder(this);  
@@ -50,17 +71,25 @@ public class MainActivity extends Activity {
 	       
 	              
 	      
-	       //Save button  
+		    //Save button  
 	       noteBuilder.setPositiveButton("Save",  
 	        new DialogInterface.OnClickListener() {  
 	        public void onClick(DialogInterface dialog, int which) {  
 	          //Save info here
-	        	Context context = getApplicationContext();
-	        	CharSequence text = input.getText().toString();;
-	        	int duration = Toast.LENGTH_SHORT;
+	        	
+	        	Comment comment = null;
+	    		ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+	    		String text = input.getText().toString();
+	    		comment = datasource.createComment(text);
+	    		adapter.add(comment);
+	    		adapter.notifyDataSetChanged();
+	            
+	            
+	        	
+	        	
+	        	
 
-	        	Toast toast = Toast.makeText(context, text, duration);
-	        	toast.show();
+	        	
 	        }  
 	        });  
 	      
@@ -75,4 +104,17 @@ public class MainActivity extends Activity {
 	       AlertDialog noteDialog = noteBuilder.create();  
 	       noteDialog.show();
 	}
+	
+	@Override
+	  protected void onResume() {
+	    datasource.open();
+	    super.onResume();
+	  }
+
+	  @Override
+	  protected void onPause() {
+	    datasource.close();
+	    super.onPause();
+	  }
+
 }

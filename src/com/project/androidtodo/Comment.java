@@ -3,6 +3,7 @@ package com.project.androidtodo;
 public class Comment {
 	  private long id;
 	  private String comment;
+	  
 
 	  public long getId() {
 	    return id;

@@ -53,6 +53,16 @@ public class MainActivity extends ListActivity  {
 	            return true;
 	        case R.id.action_settings:
 	            return true;
+	        case R.id.delete:
+	        	@SuppressWarnings("unchecked")
+	            ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+	            Comment comment = null;
+	        	if (getListAdapter().getCount() > 0) {
+	                comment = (Comment) getListAdapter().getItem(0);
+	                datasource.deleteComment(comment);
+	                adapter.remove(comment);
+	              }
+	              return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
